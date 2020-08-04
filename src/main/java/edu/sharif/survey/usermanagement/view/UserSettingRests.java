@@ -67,20 +67,12 @@ public class UserSettingRests {
         final String token = tokenUtil.generateToken(userDetails);
         log.info("the token will expired : " + tokenUtil.getExpirationDateFromToken(token));
         userService.addLoginInfo(user);
-        assignCookie(token,response);
+        assignCookie(token, response);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     private void assignCookie(String token, HttpServletResponse response) {
-        Cookie cookie = new Cookie(COOKIE_NAME,TOKEN_PREFIX + token);
-        // expires in an hour
-        cookie.setMaxAge(60 * 60);
-        // optional properties
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        // add cookie to response
-        response.addCookie(cookie);
+        response.addHeader("cookie", COOKIE_NAME + "=" + token);
     }
 
     @PostMapping("/edit")
